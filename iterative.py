@@ -1,0 +1,47 @@
+from collections import deque
+from copy import deepcopy
+
+
+# Count the number of game positions in CRAM and DJUV
+# Usage: python iterative.py width height
+
+def tilings(b):
+    pos = deque([b])
+    children = set()
+    while pos:
+        b = pos.pop()
+        l = len(children);
+        children.add(key(b));
+        if l != len(children):
+            for j in range(0, len(b[0])):
+                for i in range(0, len(b) - 1):
+                    if not b[i][j] and not b[i + 1][j]:
+                        b1 = deepcopy(b)
+                        b1[i][j] = True
+                        b1[i + 1][j] = True
+                        pos.append(b1)
+            for i in range(0, len(b)):
+                for j in range(0, len(b[0]) - 1):
+                    if not b[i][j] and not b[i][j + 1]:
+                        b1 = deepcopy(b)
+                        b1[i][j] = True
+                        b1[i][j + 1] = True
+                        pos.append(b1)
+    return children
+
+
+def key(b):
+    key = 0
+    w = len(b)
+    h = len(b[0])
+    for i in range(0, w * h):
+        key += b[i % w][i // w] << i
+    return key
+
+
+def main(width, height):
+    print(len(tilings([[False for i in range(height)] for j in range(width)])))
+
+
+if __name__ == "__main__":
+    main(3, 6)
